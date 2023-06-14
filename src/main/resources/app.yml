@@ -1,0 +1,44 @@
+server.port: 9009
+
+solon.app:
+  name: 'funIM'
+  group: 'demo'
+
+jdbc.db1:
+  schema: "funIM"
+  jdbcUrl: "jdbc:mysql://localhost:3306/funIM?useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=true"
+  driverClassName: "com.mysql.cj.jdbc.Driver"
+  username: "funIM"
+  password: "123456"
+  maxLifetime: 1000000
+
+mybatis.db1: #db1 要与数据源的bean name 对上
+  typeAliases:    #支持包名 或 类名（.class 结尾）
+    - "com.example.funIM.model"
+  mappers:        #支持包名 或 类名（.class 结尾）或 xml（.xml结尾）；配置的mappers 会 mapperScan并交由Ioc容器托管
+    - "classpath:funIM/**/*.xml"
+  configuration:  #扩展配置（要与 Configuration 类的属性一一对应）
+    cacheEnabled: false
+    mapperVerifyEnabled: false #如果为 true，则要求所有 mapper 有 @Mapper 主解
+    mapUnderscoreToCamelCase: true
+
+redisson.redis.db1:
+  file: "classpath:redisson.yml"
+
+# log
+solon.logging.appender:
+  console:
+    level: TRACE
+    pattern: "%highlight{%-5level %d{yyyy-MM-dd HH:mm:ss.SSS} [-%t][*%X{traceId}]%tags[%logger{20}]: %n%msg%n}"
+  file:
+    name: "logs/${solon.app.name}"
+    extension: ".log"
+    level: INFO
+    pattern: "%-5level %d{yyyy-MM-dd HH:mm:ss.SSS} [-%t][*%X{traceId}]%tags[%logger{20}]: %n%msg%n"
+  cloud:
+    level: INFO
+
+# 记录器级别的配置示例
+solon.logging.logger:
+  "root": #默认记录器配置
+    level: INFO
